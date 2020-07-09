@@ -1,0 +1,14 @@
+pushimage:
+  - action: updateDB
+    repository: 
+      - namespace: iamp
+        name: datacollector
+      - namespace: iamp
+        name: dataprovider
+      - namespace: demo2
+        name: alpine
+pullimage:
+  - action: none
+    repository: 
+      - namespace: xxxx
+        name: nnnn
