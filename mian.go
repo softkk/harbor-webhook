@@ -19,6 +19,7 @@ import (
 var (
 	//ConfigFilePath -
 	ConfigFilePath string
+	rule           models.Rule
 )
 
 func init() {
@@ -41,17 +42,7 @@ func main() {
 	router.Use(gin.Recovery())
 
 	//config
-	var rule models.Rule
-	fileBytes, err := ioutil.ReadFile(ConfigFilePath)
-	if err != nil {
-		log.Panic(err.Error())
-		return
-	}
-	err2 := yaml.Unmarshal(fileBytes, &rule)
-	if err2 != nil {
-		log.Panic(err2.Error())
-		return
-	}
+	loadConf()
 
 	//DB
 	defer database.MysqlDB.Close()
@@ -93,10 +84,28 @@ func main() {
 
 	})
 
+	router.POST("/reload", func(c *gin.Context) {
+		loadConf()
+	})
+
 	router.GET("/health", func(c *gin.Context) {
 		c.String(http.StatusOK, "ok")
 	})
 
 	router.Run(":20001")
 
+}
+
+func loadConf() {
+	rule = models.Rule{}
+	fileBytes, err := ioutil.ReadFile(ConfigFilePath)
+	if err != nil {
+		log.Panic(err.Error())
+		return
+	}
+	err2 := yaml.Unmarshal(fileBytes, &rule)
+	if err2 != nil {
+		log.Panic(err2.Error())
+	}
+	log.Println("config has load successful")
 }
