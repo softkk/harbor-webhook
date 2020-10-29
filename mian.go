@@ -69,7 +69,7 @@ func main() {
 			for _, value := range rule.Pushimage {
 				if value.Action == "updateDB" {
 					for _, repo := range value.Repository { // docker.io/namespace/name:tag
-						if repo.Namespace == hookNamespace && (repo.Name == hookName || repo.Name == ""){
+						if repo.Namespace == hookNamespace && (repo.Name == hookName || repo.Name == "") {
 							updateDB(hookMessage)
 							break
 						}
